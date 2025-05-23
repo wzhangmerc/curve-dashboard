@@ -40,7 +40,10 @@ with tab1:
 with tab2:
     st.subheader("Seasonality by Curve")
 
-    df["MONTH"] = df["ASSESSDATE"].dt.strftime("%b")
+    month_order = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+               "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    df["MONTH"] = pd.Categorical(df["ASSESSDATE"].dt.strftime("%b"), categories=month_order, ordered=True)
+
     df["YEAR"] = df["ASSESSDATE"].dt.year
 
     grouped = df.groupby(["YEAR", "MONTH", "DESCRIPTION"])["VALUE"].mean().reset_index()
