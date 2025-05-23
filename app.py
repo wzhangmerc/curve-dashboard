@@ -19,7 +19,7 @@ df = load_data()
 tab1, tab2, tab3, tab4 = st.tabs(["Peak & Off-Peak Charts", "Seasonality Trends", "Compare 2 Price Curves", "DoD % Change"])
 
 
-# === Tab 1: Peak and Off-Peak Charts ===
+#Tab 1: Peak and Off-Peak Charts
 with tab1:
     st.subheader("Interactive Price Charts")
 
@@ -36,7 +36,7 @@ with tab1:
                       title="Off-Peak Curves Over Time", height=600)
     st.plotly_chart(fig_off, use_container_width=True)
 
-# === Tab 2: Seasonality Chart ===
+#Tab 2: Seasonality Chart
 with tab2:
     st.subheader("Seasonality by Curve")
 
@@ -57,7 +57,7 @@ with tab2:
     st.plotly_chart(fig_season, use_container_width=True)
 
 
-# === Tab 3: Compare 2 Price Curves (Value) ===
+#Tab 3: Compare 2 Price Curves (Value)
 with tab3:
     st.subheader("Compare 2 Price Curves (Value Difference)")
 
@@ -80,7 +80,7 @@ with tab3:
         st.plotly_chart(fig, use_container_width=True)
 
 
-# === Tab 4: DoD % Change ===
+#Tab 4: DoD % Change
 with tab4:
     st.subheader("Day-over-Day % Change of Curves")
 
