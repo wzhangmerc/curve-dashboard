@@ -10,13 +10,14 @@ st.title("Four Corners, Mona, Palo Verde, Pinnacle Peak Price Report Dashboard")
 # Load data from Excel
 @st.cache_data
 def load_data():
-    df_raw = pd.read_excel("reports/data_report.xlsx", sheet_name="Raw Data", parse_dates=["ASSESSDATE"])
+    df_raw = pd.read_excel("reports/data_report_final.xlsx", sheet_name="Raw Data", parse_dates=["ASSESSDATE"])
     return df_raw
 
 df = load_data()
 
 # Create tabs
-tab1, tab2, tab3 = st.tabs(["Peak & Off-Peak Charts", "Seasonality Trends", "DoD Comparison"])
+tab1, tab2, tab3, tab4 = st.tabs(["Peak & Off-Peak Charts", "Seasonality Trends", "Compare 2 Price Curves", "DoD % Change"])
+
 
 # === Tab 1: Peak and Off-Peak Charts ===
 with tab1:
@@ -52,9 +53,10 @@ with tab2:
                          title=f"Seasonality Trend: {selected_symbol}", markers=True, height=600)
     st.plotly_chart(fig_season, use_container_width=True)
 
-# === Tab 3: DoD Comparison ===
+
+# === Tab 3: Compare 2 Price Curves (Value) ===
 with tab3:
-    st.subheader("Compare Two Curves: Value and Difference")
+    st.subheader("Compare 2 Price Curves (Value Difference)")
 
     curves = sorted(df["DESCRIPTION"].unique())
     curve1 = st.selectbox("Select first curve", curves, key="curve1")
@@ -74,3 +76,23 @@ with tab3:
 
         st.plotly_chart(fig, use_container_width=True)
 
+
+# === Tab 4: DoD % Change ===
+with tab4:
+    st.subheader("Day-over-Day % Change of Curves")
+
+    df_pct = df.copy()
+    df_pct["DOD_PCT"] = df_pct.groupby("DESCRIPTION")["VALUE"].pct_change() * 100
+
+    selected_dod_curve = st.selectbox("Select a curve to view % change", sorted(df_pct["DESCRIPTION"].unique()), key="dod_curve")
+
+    plot_df = df_pct[df_pct["DESCRIPTION"] == selected_dod_curve].dropna()
+
+    fig_dod = px.bar(
+        plot_df,
+        x="ASSESSDATE",
+        y="DOD_PCT",
+        title=f"Day-over-Day % Change: {selected_dod_curve}",
+        height=600
+    )
+    st.plotly_chart(fig_dod, use_container_width=True)
